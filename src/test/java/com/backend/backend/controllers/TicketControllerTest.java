@@ -83,7 +83,7 @@ class TicketControllerTest {
 
         when(ticketService.findAll()).thenReturn(tickets);
 
-        this.mockMvc.perform(get("/tickets"))
+        this.mockMvc.perform(get("/api/tickets"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].description").value("Engineer"))
                 .andExpect(jsonPath("$[1].description").value("DevOps"))
@@ -96,11 +96,11 @@ class TicketControllerTest {
 
         when(userService.findById(1L)).thenReturn(java.util.Optional.ofNullable(owner));
 
-        this.mockMvc.perform(get("/user/1000/tickets"))
+        this.mockMvc.perform(get("/api/user/1000/tickets"))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        this.mockMvc.perform(get("/user/1/tickets"))
+        this.mockMvc.perform(get("/api/user/1/tickets"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].description").value("Engineer"))
                 .andExpect(jsonPath("$[1].description").value("DevOps"))
@@ -113,13 +113,13 @@ class TicketControllerTest {
 
         when(userService.findById(1L)).thenReturn(java.util.Optional.ofNullable(owner));
 
-        this.mockMvc.perform(get("/add/ticket")
+        this.mockMvc.perform(get("/api/add/ticket")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new Tickets(10L, owner, "Engineer", true))))
                 .andExpect(status().isMethodNotAllowed())
                 .andReturn();
 
-        this.mockMvc.perform(post("/add/ticket")
+        this.mockMvc.perform(post("/api/add/ticket")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new Tickets(10L, owner, "Engineer", true))))
                 .andExpect(status().isCreated())
@@ -132,7 +132,7 @@ class TicketControllerTest {
         when(ticketService.findById(1L)).thenReturn(java.util.Optional.ofNullable(
                 new Tickets(1L, owner, "Engineer", true)));
 
-        this.mockMvc.perform(delete("/delete/ticket/1"))
+        this.mockMvc.perform(delete("/api/delete/ticket/1"))
                 .andReturn();
 
         verify(ticketService, times(1)).deleteById(anyLong());
@@ -142,7 +142,7 @@ class TicketControllerTest {
     void updateTicketDescription() throws Exception {
         when(ticketService.findById(1L)).thenReturn(java.util.Optional.ofNullable(
                 new Tickets(1L, owner, "Engineer", true)));
-        this.mockMvc.perform(put("/update/ticket/1/description")
+        this.mockMvc.perform(put("/api/update/ticket/1/description")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new Tickets(1L, owner, "Cheese", true))))
                 .andExpect(jsonPath("$.description").value("Cheese"))
@@ -167,7 +167,7 @@ class TicketControllerTest {
 
         when(userService.findAll()).thenReturn(owners);
 
-        this.mockMvc.perform(get("/owners"))
+        this.mockMvc.perform(get("/api/owners"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Boyns"))
                 .andExpect(jsonPath("$[1].job").value("Julius"))
@@ -180,13 +180,13 @@ class TicketControllerTest {
 
         when(userService.findById(1L)).thenReturn(java.util.Optional.ofNullable(owner));
 
-        this.mockMvc.perform(get("/add/owner")
+        this.mockMvc.perform(get("/api/add/owner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new Owner(1L, "Harrison", "Engineer"))))
                 .andExpect(status().isMethodNotAllowed())
                 .andReturn();
 
-        this.mockMvc.perform(post("/add/owner")
+        this.mockMvc.perform(post("/api/add/owner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new Owner(1L, "Harrison", "Engineer"))))
                 .andExpect(status().isCreated())
@@ -199,7 +199,7 @@ class TicketControllerTest {
         when(userService.findById(1L)).thenReturn(java.util.Optional.ofNullable(
                 new Owner(1L, "Harrison", "Engineer")));
 
-        this.mockMvc.perform(delete("/delete/owner/1"))
+        this.mockMvc.perform(delete("/api/delete/owner/1"))
                 .andReturn();
 
         verify(userService, times(1)).deleteById(anyLong());
@@ -209,7 +209,7 @@ class TicketControllerTest {
     void updateOwnerJob() throws Exception {
         when(userService.findById(1L)).thenReturn(java.util.Optional.ofNullable(
                 new Owner(1L, "Harrison", "Engineer")));
-        this.mockMvc.perform(put("/update/owner/1/job")
+        this.mockMvc.perform(put("/api/update/owner/1/job")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new Owner(1L, "Harrison", "Cheese"))))
                 .andExpect(jsonPath("$.job").value("Cheese"))
