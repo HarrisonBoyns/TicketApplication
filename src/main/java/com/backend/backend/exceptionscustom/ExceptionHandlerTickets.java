@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -55,9 +57,9 @@ public class ExceptionHandlerTickets {
 
     @ResponseBody
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<ApiError> handleApiException(Exception ex) {
+    public ResponseEntity<ApiError> handleApiException(ConstraintViolationException ex, WebRequest request) {
         List<String> errorMessages = new ArrayList<>();
-        String message = ex.getMessage();
+        log.warn(request.getDescription(true));
         return new ResponseEntity<ApiError>(new ApiError(ex.getLocalizedMessage(), errorMessages), HttpStatus.BAD_REQUEST);
     }
 

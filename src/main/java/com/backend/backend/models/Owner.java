@@ -26,7 +26,7 @@ public class Owner {
     @NotNull
     private String name;
 
-    @NotNull
+    @NotNull(message = "job field missing")
     private String job;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
