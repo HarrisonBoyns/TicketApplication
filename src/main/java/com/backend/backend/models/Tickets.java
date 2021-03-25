@@ -13,7 +13,6 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tickets {
 
     @Id
@@ -30,4 +29,10 @@ public class Tickets {
 
     @NotNull
     private Boolean finished;
+
+    public Tickets(Owner owner, @NotNull @Size(min = 10, max = 200) String description, @NotNull Boolean finished) {
+        this.owner = owner;
+        this.description = description;
+        this.finished = finished;
+    }
 }

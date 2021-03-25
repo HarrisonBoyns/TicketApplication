@@ -1,4 +1,4 @@
-package com.backend.backend.controllers;
+package com.backend.backend;
 
 import com.backend.backend.exceptionscustom.ApiException;
 import com.backend.backend.models.Owner;

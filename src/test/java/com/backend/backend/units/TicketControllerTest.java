@@ -1,5 +1,6 @@
-package com.backend.backend.controllers;
+package com.backend.backend.controllers.units;
 
+import com.backend.backend.controllers.TicketController;
 import com.backend.backend.models.Owner;
 import com.backend.backend.models.Tickets;
 import com.backend.backend.services.TicketService;

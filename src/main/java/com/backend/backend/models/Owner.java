@@ -38,4 +38,8 @@ public class Owner {
         this.name = name;
         this.job = job;
     }
+    public Owner(@NotNull String name, @NotNull String job) {
+        this.name = name;
+        this.job = job;
+    }
 }
