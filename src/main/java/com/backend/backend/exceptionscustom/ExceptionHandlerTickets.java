@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +19,8 @@ import java.util.List;
 public class ExceptionHandlerTickets {
 
     @ResponseBody
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = {ApiException.class})
     public ResponseEntity<ApiError> handleApiException(ApiException ex){
-
-        log.warn(ex.getLocalizedMessage());
 
         HttpStatus status = ex.getResponseCode();
 
@@ -54,4 +53,12 @@ public class ExceptionHandlerTickets {
         return new ResponseEntity<ApiError>(new ApiError(ex.getLocalizedMessage(), errorMessages), ex.getResponseCode());
     }
 
-}
+    @ResponseBody
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleApiException(Exception ex) {
+        List<String> errorMessages = new ArrayList<>();
+        String message = ex.getMessage();
+        return new ResponseEntity<ApiError>(new ApiError(ex.getLocalizedMessage(), errorMessages), HttpStatus.BAD_REQUEST);
+    }
+
+    }

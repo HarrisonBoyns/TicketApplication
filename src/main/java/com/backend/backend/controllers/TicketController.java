@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/api")
 @Validated
 public class TicketController {
 
@@ -38,7 +40,6 @@ public class TicketController {
     @GetMapping(path = "/user/{userid}/tickets")
     public ResponseEntity<List<Tickets>> getTicketsByUserId(@PathVariable Long userid) throws ApiException {
         Owner owner = userService.findById(userid).orElseThrow(() -> new ApiException("No user of id:" + userid, HttpStatus.NOT_FOUND));
-        System.out.println("\n\n\n\n"+owner.getName()+ "\n\n\n\n");
         List<Tickets> tickets = owner.getTickets();
         return new ResponseEntity<List<Tickets>>(tickets, HttpStatus.OK);
     }
@@ -86,8 +87,11 @@ public class TicketController {
 
     @DeleteMapping(path = "/delete/owner/{id}")
     public ResponseEntity<Owner> deleteOwner(@PathVariable Long id) throws ApiException {
-        Owner owner = userService.findById(id).orElseThrow(() -> new ApiException("No ticket of id: " + id, HttpStatus.NOT_FOUND));
+        Owner owner = userService.findById(id).orElseThrow(EntityNotFoundException::new);
         userService.deleteById(id);
+        if(userService.existsById(id)) {
+            return new ResponseEntity<Owner>(owner, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<Owner>(owner, HttpStatus.OK);
     }
 
