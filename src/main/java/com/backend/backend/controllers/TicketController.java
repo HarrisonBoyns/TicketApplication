@@ -1,4 +1,4 @@
-package com.backend.backend;
+package com.backend.backend.controllers;
 
 import com.backend.backend.exceptionscustom.ApiException;
 import com.backend.backend.models.Owner;
@@ -28,7 +28,7 @@ public class TicketController {
 
     @GetMapping(path = "/ticket/{id}")
     public ResponseEntity<Tickets> getTicket(@PathVariable Long id){
-        Tickets tickets = ticketService.findById(id).get();
+        Tickets tickets = ticketService.findById(id).orElseThrow(() -> new ApiException("No user of this id", HttpStatus.NOT_FOUND));
         return new ResponseEntity<Tickets>(tickets, HttpStatus.OK);
     }
 
