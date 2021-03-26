@@ -14,11 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = BackendApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,15 +58,14 @@ public class IntegrationTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Tickets> owners = Arrays.stream(objects)
+        List<Tickets> tickets = Arrays.stream(objects)
                 .map(object -> mapper.convertValue(object, Tickets.class))
                 .collect(Collectors.toList());
-        log.warn(String.valueOf(owners.size()));
+        log.warn(String.valueOf(tickets.size()));
 
         assertTrue(contentType.includes(MediaType.valueOf("application/json")));
         assertTrue(statusCode == HttpStatus.OK);
-        System.out.println(owners.size());
-        assertTrue(owners.size() == 5);
+        assertTrue(tickets.size() == 5);
 
     }
 
